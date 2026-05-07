@@ -91,13 +91,13 @@ SELECT 'ROAS',
 FROM ads_performance;
 
 -- 1.3  Row counts per categorical dimension
-SELECT 'platform'      AS dimension, platform      AS value, COUNT(*) AS n FROM ads_performance GROUP BY platform
+SELECT 'platform'AS dimension, platform AS value, COUNT(*) AS n FROM ads_performance GROUP BY platform
 UNION ALL
-SELECT 'campaign_type',               campaign_type,           COUNT(*) FROM ads_performance GROUP BY campaign_type
+SELECT 'campaign_type',campaign_type,COUNT(*) FROM ads_performance GROUP BY campaign_type
 UNION ALL
-SELECT 'industry',                    industry,                COUNT(*) FROM ads_performance GROUP BY industry
+SELECT 'industry',industry,COUNT(*) FROM ads_performance GROUP BY industry
 UNION ALL
-SELECT 'country',                     country,                 COUNT(*) FROM ads_performance GROUP BY country
+SELECT 'country',country,COUNT(*) FROM ads_performance GROUP BY country
 ORDER BY dimension, n DESC;
 
 
@@ -156,14 +156,14 @@ ORDER BY revenue_usd DESC;
 -- 3.1  KPI per campaign type
 SELECT
     campaign_type,
-    COUNT(*)                                             AS campaigns,
-    ROUND(AVG(CTR) * 100, 2)                             AS avg_CTR_pct,
-    ROUND(AVG(CPC), 2)                                   AS avg_CPC_usd,
-    ROUND(AVG(CPA), 2)                                   AS avg_CPA_usd,
-    ROUND(AVG(ROAS), 2)                                  AS avg_ROAS,
-    ROUND(SUM(conversions), 0)                           AS total_conversions,
-    ROUND(SUM(revenue), 2)                               AS total_revenue_usd,
-    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2)   AS actual_ROAS
+    COUNT(*) AS campaigns,
+    ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct,
+    ROUND(AVG(CPC), 2) AS avg_CPC_usd,
+    ROUND(AVG(CPA), 2) AS avg_CPA_usd,
+    ROUND(AVG(ROAS), 2) AS avg_ROAS,
+    ROUND(SUM(conversions), 0) AS total_conversions,
+    ROUND(SUM(revenue), 2) AS total_revenue_usd,
+    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2) AS actual_ROAS
 FROM ads_performance
 GROUP BY campaign_type
 ORDER BY actual_ROAS DESC;
@@ -193,8 +193,8 @@ SELECT
     platform,
     campaign_type,
     ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2) AS actual_ROAS,
-    ROUND(AVG(CPA), 2)                                 AS avg_CPA,
-    ROUND(SUM(conversions), 0)                         AS total_conversions
+    ROUND(AVG(CPA), 2) AS avg_CPA,
+    ROUND(SUM(conversions), 0) AS total_conversions
 FROM ads_performance
 GROUP BY platform, campaign_type
 ORDER BY actual_ROAS DESC
@@ -208,13 +208,13 @@ LIMIT 10;
 -- 4.1  KPI per industry
 SELECT
     industry,
-    COUNT(*)                                             AS campaigns,
-    ROUND(SUM(ad_spend), 2)                              AS total_spend_usd,
-    ROUND(SUM(revenue), 2)                               AS total_revenue_usd,
-    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2)   AS actual_ROAS,
-    ROUND(AVG(CTR) * 100, 2)                             AS avg_CTR_pct,
-    ROUND(AVG(CPA), 2)                                   AS avg_CPA_usd,
-    ROUND(SUM(conversions), 0)                           AS total_conversions
+    COUNT(*) AS campaigns,
+    ROUND(SUM(ad_spend), 2) AS total_spend_usd,
+    ROUND(SUM(revenue), 2) AS total_revenue_usd,
+    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2) AS actual_ROAS,
+    ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct,
+    ROUND(AVG(CPA), 2) AS avg_CPA_usd,
+    ROUND(SUM(conversions), 0) AS total_conversions
 FROM ads_performance
 GROUP BY industry
 ORDER BY actual_ROAS DESC;
@@ -257,13 +257,13 @@ ORDER BY actual_ROAS DESC;
 -- 5.1  KPI per country
 SELECT
     country,
-    COUNT(*)                                             AS campaigns,
-    ROUND(SUM(ad_spend), 2)                              AS total_spend_usd,
-    ROUND(SUM(revenue), 2)                               AS total_revenue_usd,
+    COUNT(*) AS campaigns,
+    ROUND(SUM(ad_spend), 2) AS total_spend_usd,
+    ROUND(SUM(revenue), 2) AS total_revenue_usd,
     ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2)   AS actual_ROAS,
-    ROUND(AVG(CPC), 2)                                   AS avg_CPC_usd,
-    ROUND(AVG(CPA), 2)                                   AS avg_CPA_usd,
-    ROUND(AVG(CTR) * 100, 2)                             AS avg_CTR_pct
+    ROUND(AVG(CPC), 2) AS avg_CPC_usd,
+    ROUND(AVG(CPA), 2) AS avg_CPA_usd,
+    ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct
 FROM ads_performance
 GROUP BY country
 ORDER BY actual_ROAS DESC;
@@ -299,12 +299,12 @@ WHERE rk = 1;
 
 -- 6.1  Monthly aggregated KPIs
 SELECT
-    strftime('%Y-%m', date)                              AS month,
-    ROUND(SUM(ad_spend), 2)                              AS total_spend_usd,
-    ROUND(SUM(revenue), 2)                               AS total_revenue_usd,
-    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2)   AS monthly_ROAS,
-    ROUND(AVG(CTR) * 100, 2)                             AS avg_CTR_pct,
-    ROUND(SUM(conversions), 0)                           AS total_conversions
+    strftime('%Y-%m', date) AS month,
+    ROUND(SUM(ad_spend), 2) AS total_spend_usd,
+    ROUND(SUM(revenue), 2) AS total_revenue_usd,
+    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2) AS monthly_ROAS,
+    ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct,
+    ROUND(SUM(conversions), 0) AS total_conversions
 FROM ads_performance
 GROUP BY strftime('%Y-%m', date)
 ORDER BY month;
@@ -322,10 +322,10 @@ SELECT
         WHEN '5' THEN '5_Friday'
         WHEN '6' THEN '6_Saturday'
     END AS day_of_week,
-    ROUND(AVG(CTR) * 100, 2)                             AS avg_CTR_pct,
-    ROUND(AVG(ROAS), 2)                                  AS avg_ROAS,
-    ROUND(AVG(CPA), 2)                                   AS avg_CPA_usd,
-    COUNT(*)                                             AS n
+    ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct,
+    ROUND(AVG(ROAS), 2) AS avg_ROAS,
+    ROUND(AVG(CPA), 2) AS avg_CPA_usd,
+    COUNT(*) AS n
 FROM ads_performance
 GROUP BY strftime('%w', date)
 ORDER BY day_of_week;
@@ -339,10 +339,10 @@ SELECT
         WHEN strftime('%m', date) IN ('07','08','09') THEN 'Q3'
         ELSE 'Q4'
     END AS quarter,
-    ROUND(SUM(ad_spend), 2)                              AS spend_usd,
-    ROUND(SUM(revenue), 2)                               AS revenue_usd,
-    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2)   AS ROAS,
-    ROUND(SUM(conversions), 0)                           AS conversions
+    ROUND(SUM(ad_spend), 2) AS spend_usd,
+    ROUND(SUM(revenue), 2) AS revenue_usd,
+    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2) AS ROAS,
+    ROUND(SUM(conversions), 0) AS conversions
 FROM ads_performance
 GROUP BY year, quarter
 ORDER BY year, quarter;
@@ -360,11 +360,11 @@ SELECT
         WHEN ROAS >= 2  THEN 'Acceptable (2–4.99)'
         ELSE                 'Unprofitable (<2)'
     END AS roas_tier,
-    COUNT(*)                              AS n_campaigns,
+    COUNT(*) AS n_campaigns,
     ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER(), 1) AS pct,
-    ROUND(AVG(ROAS), 2)                  AS avg_ROAS,
-    ROUND(SUM(ad_spend), 2)              AS total_spend_usd,
-    ROUND(SUM(revenue), 2)               AS total_revenue_usd
+    ROUND(AVG(ROAS), 2) AS avg_ROAS,
+    ROUND(SUM(ad_spend), 2) AS total_spend_usd,
+    ROUND(SUM(revenue), 2) AS total_revenue_usd
 FROM ads_performance
 GROUP BY roas_tier
 ORDER BY avg_ROAS DESC;
@@ -396,9 +396,9 @@ SELECT
     campaign_type,
     industry,
     country,
-    COUNT(*)                   AS n_campaigns,
-    ROUND(SUM(ad_spend), 2)   AS wasted_spend_usd,
-    ROUND(AVG(ROAS), 2)       AS avg_ROAS
+    COUNT(*) AS n_campaigns,
+    ROUND(SUM(ad_spend), 2) AS wasted_spend_usd,
+    ROUND(AVG(ROAS), 2) AS avg_ROAS
 FROM ads_performance
 WHERE ROAS < 2
 GROUP BY platform, campaign_type, industry, country
@@ -413,9 +413,9 @@ WITH scored AS (
         campaign_type,
         industry,
         country,
-        ROUND(AVG(ROAS), 2)                                    AS avg_ROAS,
-        ROUND(AVG(CPA), 2)                                     AS avg_CPA,
-        ROUND(AVG(CTR) * 100, 2)                               AS avg_CTR_pct,
+        ROUND(AVG(ROAS), 2) AS avg_ROAS,
+        ROUND(AVG(CPA), 2) AS avg_CPA,
+        ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct,
         -- Composite: higher ROAS & CTR = better; lower CPA = better
         ROUND(AVG(ROAS) * AVG(CTR) / NULLIF(AVG(CPA), 0), 4)  AS efficiency_score
     FROM ads_performance
@@ -461,10 +461,10 @@ ORDER BY platform, campaign_type;
 SELECT
     platform,
     campaign_type,
-    COUNT(*)            AS n,
+    COUNT(*) AS n,
     ROUND(AVG(ROAS), 2) AS mean_ROAS,
-    ROUND(AVG(CPA), 2)  AS mean_CPA,
-    ROUND(AVG(CTR), 4)  AS mean_CTR
+    ROUND(AVG(CPA), 2) AS mean_CPA,
+    ROUND(AVG(CTR), 4) AS mean_CTR
 FROM ads_performance
 GROUP BY platform, campaign_type
 ORDER BY platform, campaign_type;
@@ -545,8 +545,8 @@ SELECT
     industry,
     platform,
     campaign_type,
-    ROUND(SUM(ad_spend), 2)                              AS current_spend,
-    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2)   AS actual_ROAS,
+    ROUND(SUM(ad_spend), 2) AS current_spend,
+    ROUND(SUM(revenue) / NULLIF(SUM(ad_spend), 0), 2) AS actual_ROAS,
     RANK() OVER (
         PARTITION BY industry
         ORDER BY SUM(revenue)/NULLIF(SUM(ad_spend),0) DESC
@@ -561,11 +561,11 @@ SELECT
     campaign_type,
     industry,
     country,
-    COUNT(*)                   AS n,
+    COUNT(*) AS n,
     ROUND(SUM(impressions), 0) AS total_impressions,
-    ROUND(AVG(ROAS), 2)        AS avg_ROAS,
-    ROUND(AVG(CPA), 2)         AS avg_CPA,
-    ROUND(AVG(CTR) * 100, 2)   AS avg_CTR_pct
+    ROUND(AVG(ROAS), 2) AS avg_ROAS,
+    ROUND(AVG(CPA), 2) AS avg_CPA,
+    ROUND(AVG(CTR) * 100, 2) AS avg_CTR_pct
 FROM ads_performance
 WHERE ROAS > (SELECT AVG(ROAS) FROM ads_performance)
   AND CPA  < (SELECT AVG(CPA)  FROM ads_performance)
@@ -580,10 +580,10 @@ SELECT
     campaign_type,
     industry,
     country,
-    COUNT(*)                  AS n,
-    ROUND(AVG(ROAS), 2)       AS avg_ROAS,
-    ROUND(AVG(CPA), 2)        AS avg_CPA,
-    ROUND(SUM(ad_spend), 2)   AS total_spend
+    COUNT(*) AS n,
+    ROUND(AVG(ROAS), 2) AS avg_ROAS,
+    ROUND(AVG(CPA), 2) AS avg_CPA,
+    ROUND(SUM(ad_spend), 2) AS total_spend
 FROM ads_performance
 WHERE ROAS < 1.5
 GROUP BY platform, campaign_type, industry, country
